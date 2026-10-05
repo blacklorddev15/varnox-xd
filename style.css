@@ -1,0 +1,113 @@
+/* VARNOX XD – shared styles
+   Palette: golden (--gold #facc15) on near-black, matching the golden theme used
+   across the Blacklord portals. Layout and structure are unchanged. */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --gold: #facc15;
+  --gold-deep: #d97706;
+  --gold-soft: rgba(250, 204, 21, 0.13);
+  --gold-line: rgba(250, 204, 21, 0.22);
+  --bg: #09090b;
+  --card: rgba(24, 24, 27, 0.92);
+  --field: #0d0d10;
+  --text: #fafafa;
+  --text-dim: #a1a1aa;
+}
+body {
+  font-family: 'Plus Jakarta Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+.shell { max-width: 640px; margin: 0 auto; padding: 18px 16px 40px; }
+.topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.topbar .brand small { display: block; font-size: 10px; letter-spacing: 3px; color: var(--text-dim); }
+.topbar .brand strong { font-size: 17px; color: #fff; }
+.icon-btn {
+  background: #141418; border: 1px solid var(--gold-line); color: #fde68a;
+  padding: 7px 11px; border-radius: 9px; font-size: 15px; cursor: pointer; text-decoration: none;
+}
+.icon-btn:hover { background: #1e1e24; }
+/* Card matches the golden card on the parent site (blacklord.tech):
+   solid gold border + gold glow, with a warm gold-tinted fill. */
+.card {
+  background: linear-gradient(145deg, rgba(61, 52, 14, 0.5), rgba(24, 24, 27, 0.96));
+  border: 1px solid #facc15;
+  border-radius: 16px;
+  padding: 18px;
+  margin-bottom: 14px;
+  box-shadow: 0 5px 20px rgba(250, 204, 21, 0.15), 0 22px 48px rgba(0, 0, 0, 0.5);
+}
+.banner-img { width: 100%; border-radius: 12px; margin-bottom: 4px; display: block; }
+h1 { font-size: 21px; margin: 6px 0 2px; }
+h1 span { color: var(--gold); }
+.sub { color: var(--text-dim); font-size: 13px; margin-bottom: 14px; }
+.pill {
+  display: inline-block; font-size: 10px; letter-spacing: 2px; padding: 4px 10px;
+  border-radius: 99px; border: 1px solid #2e5e46; color: #4ade80; background: rgba(74,222,128,.07);
+  margin-bottom: 6px;
+}
+.pill.off { border-color:#7a3540; color:#f87171; background: rgba(248,113,113,.07); }
+label { display: block; font-size: 11px; letter-spacing: 1.5px; color: var(--text-dim); margin: 12px 0 6px; }
+input[type=tel], input[type=text], input[type=password] {
+  width: 100%; background: var(--field); border: 1px solid var(--gold-line); color: #f4f4f5;
+  padding: 12px 14px; border-radius: 10px; font-size: 15px; outline: none;
+}
+input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.15); }
+.phone-wrap { display: flex; align-items: center; background: var(--field); border: 1px solid var(--gold-line); border-radius: 10px; overflow: hidden; }
+.phone-wrap span { padding: 0 12px; color: var(--text-dim); font-size: 16px; border-right: 1px solid rgba(250,204,21,.18); align-self: stretch; display: flex; align-items: center; }
+.phone-wrap input { border: none; background: transparent; border-radius: 0; }
+.btn {
+  display: block; width: 100%; border: none; border-radius: 10px; padding: 13px;
+  font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 14px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-deep)); color: #1a1503;
+}
+.btn:disabled { opacity: .55; cursor: not-allowed; }
+.btn.ghost { background: #141418; color: #fde68a; border: 1px solid rgba(250, 204, 21, 0.3); }
+.icon-btn { border: 1px solid rgba(250, 204, 21, 0.3); color: #fcd34d; }
+.status-box { margin-top: 14px; padding: 12px; border-radius: 10px; font-size: 14px; display: none; }
+.status-box.show { display: block; }
+.status-box.ok { background: rgba(74,222,128,.08); border: 1px solid #2e5e46; color: #86efac; }
+.status-box.err { background: rgba(248,113,113,.08); border: 1px solid #7a3540; color: #fca5a5; }
+.status-box.info { background: rgba(250,204,21,.08); border: 1px solid rgba(250,204,21,.35); color: #fde68a; }
+.code-result { text-align: center; padding: 18px; display: none; }
+.code-result.show { display: block; }
+.code-eyebrow { font-size: 10px; letter-spacing: 3px; color: var(--text-dim); }
+.pairing-code {
+  font-family: 'JetBrains Mono', Menlo, monospace; font-size: 30px; font-weight: 800;
+  color: var(--gold); margin: 8px 0 12px; letter-spacing: 2px;
+}
+.copy-btn { background: var(--field); border: 1px solid rgba(250,204,21,.35); color: var(--gold); padding: 9px 18px; border-radius: 9px; cursor: pointer; font-size: 13px; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+/* Inner tiles keep the softer gold hairline (like the parent site's .card-icon
+   chips) so the single card holds one strong gold edge. */
+.stat-card { background: rgba(250, 204, 21, 0.05); border: 1px solid rgba(250, 204, 21, 0.35); border-radius: 12px; padding: 12px; text-align: center; }
+.stat-card .n { font-size: 20px; font-weight: 800; color: var(--gold); }
+.stat-card .l { font-size: 10px; letter-spacing: 1px; color: var(--text-dim); margin-top: 2px; }
+.hidden { display: none; }
+.row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(250,204,21,.1); font-size: 13px; }
+.row:last-child { border-bottom: none; }
+.row .tag { font-size: 10px; padding: 2px 8px; border-radius: 99px; }
+.tag.on { background: rgba(74,222,128,.12); color: #4ade80; }
+.tag.off { background: rgba(148,163,184,.12); color: #94a3b8; }
+.tag.x { background: rgba(248,113,113,.12); color: #f87171; }
+textarea { width: 100%; background: var(--field); border: 1px solid var(--gold-line); color: #f4f4f5; padding: 10px; border-radius: 10px; font-family: inherit; font-size: 13px; resize: vertical; min-height: 60px; }
+.footer { text-align: center; color: #71717a; font-size: 12px; margin-top: 18px; }
+.footer a { color: var(--gold); text-decoration: none; }
+.notice-banner { display: none; background: rgba(250,204,21,.1); border: 1px solid rgba(250,204,21,.35); color: var(--gold); padding: 10px 14px; border-radius: 10px; font-size: 13px; margin-bottom: 12px; }
+.notice-banner.show { display: block; }
+.mono { font-family: Menlo, Consolas, monospace; font-size: 12px; }
+
+/* ── paired users ───────────────────────────────────────────── */
+.sess-main { display: flex; flex-direction: column; gap: 1px; min-width: 0; text-align: left; }
+.sess-main strong { font-size: 13px; font-weight: 700; }
+.sess-main small { font-size: 10px; color: var(--text-dim); }
+.sess-meta { opacity: .8; }
+.sess-right { display: inline-flex; align-items: center; gap: 8px; flex: 0 0 auto; }
+.del-btn {
+  background: transparent; border: 1px solid #7a3540; color: #f87171;
+  font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 8px;
+  cursor: pointer; font-family: inherit;
+}
+.del-btn:hover:not(:disabled) { background: rgba(248, 113, 113, .1); }
+.del-btn:disabled { opacity: .5; cursor: wait; }
