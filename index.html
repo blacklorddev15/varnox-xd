@@ -1,0 +1,1380 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VARNOX XD · Pairing Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #07090e;
+      --cyan: #facc15;
+      --cyan-dim: #eab308;
+      --card: linear-gradient(145deg, rgba(8, 15, 29, 0.66), rgba(2, 6, 16, 0.48));
+      --border: rgba(186, 230, 253, 0.18);
+      --hairline: rgba(250, 204, 21, 0.78);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: var(--bg); }
+    body {
+      font-family: 'Rajdhani', sans-serif;
+      color: #fff;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+    .bg-artwork {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background-image:
+        linear-gradient(115deg, rgba(1, 7, 16, 0.34), rgba(2, 6, 23, 0.32) 44%, rgba(1, 2, 8, 0.64)),
+        url('./background.jpg');
+      background-size: cover;
+      background-position: center 22%;
+      background-attachment: fixed;
+    }
+    .grid-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background-image:
+        linear-gradient(rgba(125, 211, 252, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(125, 211, 252, 0.035) 1px, transparent 1px);
+      background-size: 52px 52px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,0.86), transparent 82%);
+      -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.86), transparent 82%);
+      pointer-events: none;
+    }
+    .content { position: relative; z-index: 1; min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* header */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 20px 28px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      background: rgba(2, 6, 23, 0.35);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      flex-wrap: wrap;
+    }
+    .brand { display: flex; align-items: center; gap: 14px; }
+    .logo {
+      position: relative;
+      display: flex;
+      width: 44px; height: 44px;
+      align-items: center; justify-content: center;
+      border-radius: 16px;
+      border: 1px solid rgba(250, 204, 21, 0.55);
+      background: rgba(2, 6, 23, 0.55);
+      color: var(--cyan-dim);
+      box-shadow: 0 0 24px rgba(234, 179, 8, 0.22);
+      font-family: 'Cinzel', serif;
+      font-weight: 800;
+      font-size: 15px;
+      letter-spacing: 1px;
+    }
+    .logo::after { content: ''; position: absolute; inset: 4px; border-radius: 12px; border: 1px solid rgba(250, 204, 21, 0.15); }
+    .brand-name { display: flex; align-items: center; gap: 8px; }
+    .brand-name h1 { font-family: 'Cinzel', serif; font-size: 16px; font-weight: 700; letter-spacing: 0.16em; color: #fff; }
+    .xmd-badge {
+      border: 1px solid rgba(250, 204, 21, 0.35);
+      background: rgba(250, 204, 21, 0.1);
+      color: var(--cyan);
+      padding: 2px 7px;
+      font-size: 9px;
+      font-family: ui-monospace, monospace;
+      letter-spacing: 0.18em;
+      border-radius: 4px;
+    }
+    .brand-sub { margin-top: 2px; font-size: 10px; font-family: ui-monospace, monospace; letter-spacing: 0.2em; color: #cbd5e1; }
+    .header-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .status-pill {
+      display: flex; align-items: center; gap: 8px;
+      border: 1px solid rgba(52, 211, 153, 0.25);
+      background: rgba(52, 211, 153, 0.08);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-family: ui-monospace, monospace;
+      letter-spacing: 0.13em;
+      color: #a7f3d0;
+    }
+    .status-pill.off { border-color: rgba(251, 113, 133, 0.3); background: rgba(244, 63, 94, 0.08); color: #fda4af; }
+    .status-pill.unk { border-color: rgba(252, 211, 77, 0.3); background: rgba(245, 158, 11, 0.08); color: #fcd34d; }
+    .dot { width: 6px; height: 6px; border-radius: 50%; background: #6ee7b7; animation: pulse 2.6s ease-in-out infinite; }
+    .status-pill.off .dot { background: #fb7185; animation: none; }
+    .status-pill.unk .dot { background: #fbbf24; }
+    @keyframes pulse { 0%,100% { opacity: .42; transform: scale(.94); } 50% { opacity: 1; transform: scale(1); } }
+    .admin-btn {
+      display: flex; align-items: center; gap: 8px;
+      border: 1px solid rgba(250, 204, 21, 0.3);
+      background: rgba(250, 204, 21, 0.1);
+      color: var(--cyan);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 10px;
+      font-family: ui-monospace, monospace;
+      letter-spacing: 0.14em;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .admin-btn:hover { background: rgba(250, 204, 21, 0.2); }
+    .lang-toggle { display: flex; align-items: center; gap: 4px; border: 1px solid rgba(255,255,255,0.12); border-radius: 999px; padding: 4px; background: rgba(0,0,0,0.3); }
+    .lang-btn {
+      border: none; background: transparent; color: #94a3b8;
+      font-size: 10px; font-family: ui-monospace, monospace; font-weight: 700;
+      padding: 5px 9px; border-radius: 999px; cursor: pointer; transition: all .2s;
+    }
+    .lang-btn.active { background: rgba(250, 204, 21, 0.18); color: var(--cyan); }
+
+    /* notice bar */
+    .notice-bar {
+      display: none;
+      padding: 12px 28px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: #fff7ed;
+      background: linear-gradient(90deg, rgba(180, 83, 9, 0.55), rgba(217, 119, 6, 0.65), rgba(180, 83, 9, 0.55));
+      border-bottom: 1px solid rgba(253, 186, 116, 0.35);
+    }
+
+    /* main */
+    main { flex: 1; width: 100%; max-width: 1120px; margin: 0 auto; padding: 40px 20px 20px; }
+    .grid { display: grid; grid-template-columns: 1fr; gap: 32px; width: 100%; max-width: 520px; margin: 0 auto; align-items: center; }
+    @media (min-width: 768px) { .grid { grid-template-columns: 1fr 1fr; max-width: 1180px; gap: 48px; } }
+
+    .hero-label {
+      display: flex; align-items: center; gap: 12px;
+      font-size: 10px; font-family: ui-monospace, monospace;
+      letter-spacing: 0.28em; color: var(--cyan);
+      margin-bottom: 24px;
+    }
+    .hairline { width: 48px; height: 1px; background: linear-gradient(90deg, transparent, var(--hairline), transparent); }
+    .hero h2 {
+      font-family: 'Cinzel', serif;
+      font-size: 44px; line-height: 1.06; letter-spacing: -0.01em;
+      font-weight: 600; color: #fff;
+    }
+    @media (min-width: 768px) { .hero h2 { font-size: 64px; } }
+    .hero h2 .accent { color: var(--cyan); text-shadow: 0 0 25px rgba(250, 204, 21, 0.35); }
+    .hero p { margin-top: 22px; max-width: 420px; font-size: 17px; line-height: 1.75; color: rgba(226, 232, 240, 0.9); }
+    .hero-stats {
+      margin-top: 36px;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+      border-top: 1px solid rgba(255,255,255,0.12);
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+      padding: 16px 0;
+      max-width: 480px;
+    }
+    .hero-stats .stat b { font-family: 'Cinzel', serif; font-size: 18px; color: #fff; }
+    .hero-stats .stat span { display: block; margin-top: 4px; font-size: 9px; font-family: ui-monospace, monospace; text-transform: uppercase; letter-spacing: 0.16em; color: #cbd5e1; }
+    .hero-stats .stat + .stat { border-left: 1px solid rgba(255,255,255,0.12); padding-left: 16px; }
+    .hero-tags { margin-top: 22px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px; font-size: 10px; font-family: ui-monospace, monospace; color: #cbd5e1; }
+    .hero-tags span { display: inline-flex; align-items: center; gap: 6px; }
+    .hero-tags .sep { width: 4px; height: 4px; border-radius: 50%; background: rgba(250, 204, 21, 0.7); }
+
+    /* pairing card */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      padding: 24px;
+      box-shadow: 0 24px 70px rgba(0,0,0,0.42), inset 0 1px 0 rgba(255,255,255,0.09);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      transition: border-color .3s;
+    }
+    .card:hover { border-color: rgba(250, 204, 21, 0.42); }
+    .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+    .card-label { display: flex; align-items: center; gap: 6px; font-size: 10px; font-family: ui-monospace, monospace; letter-spacing: 0.2em; color: var(--cyan); }
+    .card-label .pulse-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--cyan-dim); animation: pulse 2.6s ease-in-out infinite; }
+    .card h3 { margin-top: 12px; font-family: 'Cinzel', serif; font-size: 24px; font-weight: 600; letter-spacing: 0.02em; }
+    .card .desc { margin-top: 8px; font-size: 14px; line-height: 1.6; color: #cbd5e1; }
+    .lock-icon {
+      border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.05);
+      padding: 12px; border-radius: 12px; color: var(--cyan);
+      font-size: 12px;
+    }
+    .divider { margin: 22px 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(250, 204, 21, 0.5), transparent); opacity: .5; }
+    label.field { display: block; margin-bottom: 8px; font-size: 10px; font-family: ui-monospace, monospace; letter-spacing: 0.18em; color: #cbd5e1; }
+    .input-wrap {
+      display: flex; align-items: center;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(0,0,0,0.35);
+      border-radius: 12px;
+      padding: 0 16px;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .input-wrap:focus-within { border-color: rgba(250, 204, 21, 0.7); box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.1); }
+    .input-wrap .plus { color: var(--cyan); margin-right: 8px; }
+    .input-wrap input {
+      width: 100%; background: transparent; border: none; outline: none;
+      padding: 16px 0; font-size: 14px; font-family: ui-monospace, monospace;
+      color: #fff;
+    }
+    .input-wrap input::placeholder { color: #475569; }
+    .error-box {
+      margin-top: 14px;
+      border: 1px solid rgba(253, 164, 175, 0.25);
+      background: rgba(76, 5, 25, 0.4);
+      color: #ffe4e6;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 12px; line-height: 1.5;
+    }
+    .pair-btn {
+      margin-top: 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      width: 100%;
+      background: var(--cyan-dim);
+      color: #020617;
+      border: none;
+      border-radius: 12px;
+      padding: 16px 20px;
+      font-family: ui-monospace, monospace;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.14em;
+      cursor: pointer;
+      box-shadow: 0 12px 30px rgba(250, 204, 21, 0.2);
+      transition: background .2s, box-shadow .2s;
+    }
+    .pair-btn:hover { background: #fde68a; box-shadow: 0 14px 35px rgba(250, 204, 21, 0.34); }
+    .pair-btn:disabled { opacity: .6; cursor: wait; }
+    .pair-btn .arrow { font-size: 18px; }
+    .code-panel {
+      margin-top: 22px;
+      border: 1px solid rgba(250, 204, 21, 0.35);
+      background: rgba(250, 204, 21, 0.08);
+      border-radius: 16px;
+      padding: 16px;
+      animation: fadeIn 380ms ease-out both;
+    }
+    .code-panel .panel-head { display: flex; align-items: center; justify-content: space-between; font-size: 10px; font-family: ui-monospace, monospace; letter-spacing: 0.18em; color: var(--cyan); }
+    .code-panel .panel-head .ready { color: #a7f3d0; }
+    .code-box {
+      margin-top: 12px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(0,0,0,0.35);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      font-family: ui-monospace, monospace;
+      font-size: 28px; font-weight: 700; letter-spacing: 0.22em;
+      color: #fff;
+    }
+    .copy-btn {
+      margin-top: 12px;
+      width: 100%;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      background: rgba(250, 204, 21, 0.1);
+      border: 1px solid rgba(250, 204, 21, 0.3);
+      color: #fef3c7;
+      border-radius: 10px;
+      padding: 10px;
+      font-size: 10px; font-family: ui-monospace, monospace; letter-spacing: 0.16em;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .copy-btn:hover { background: rgba(250, 204, 21, 0.2); }
+    .code-hint { margin-top: 12px; text-align: center; font-size: 11px; line-height: 1.5; color: #cbd5e1; }
+    .waiting-box {
+      margin-top: 22px;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      border: 1px solid rgba(250, 204, 21, 0.25);
+      background: rgba(250, 204, 21, 0.05);
+      border-radius: 16px;
+      padding: 16px;
+      font-size: 10px; font-family: ui-monospace, monospace; letter-spacing: 0.18em;
+      color: var(--cyan);
+      animation: fadeIn 380ms ease-out both;
+    }
+    .spin { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(250, 204, 21,.3); border-top-color: var(--cyan); border-radius: 50%; animation: rotate .8s linear infinite; }
+    @keyframes rotate { to { transform: rotate(360deg); } }
+    .connected-box {
+      margin-top: 22px;
+      border: 1px solid rgba(52, 211, 153, 0.35);
+      background: rgba(52, 211, 153, 0.08);
+      border-radius: 16px;
+      padding: 16px;
+      animation: fadeIn 380ms ease-out both;
+    }
+    .connected-box .head { display: flex; justify-content: space-between; font-size: 10px; font-family: ui-monospace, monospace; letter-spacing: 0.18em; color: #a7f3d0; }
+    .connected-box p { margin-top: 12px; text-align: center; font-size: 14px; color: #e2e8f0; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .card-foot {
+      margin-top: 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 16px;
+      font-size: 9px; font-family: ui-monospace, monospace; letter-spacing: 0.15em;
+      color: #94a3b8;
+    }
+    .card-foot .secure { color: #6ee7b7; }
+
+    /* trust badges */
+    .badges { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin: 44px auto 8px; max-width: 900px; }
+    .badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(2, 6, 23, 0.45);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-radius: 999px;
+      padding: 10px 18px;
+      font-size: 10px; font-family: ui-monospace, monospace; letter-spacing: 0.16em;
+      color: #cbd5e1;
+    }
+    .badge .b-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--cyan-dim); }
+
+    /* server status (Server 1 / 2 / 3) */
+    .server-grid { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 6px; }
+    @media (min-width: 768px) { .server-grid { grid-template-columns: repeat(3, 1fr); } }
+    .server-tile {
+      display: flex; align-items: center; gap: 14px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(2, 6, 23, 0.45);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 18px;
+      padding: 18px 20px;
+      transition: border-color .25s;
+    }
+    .server-tile b { font-family: ui-monospace, monospace; font-size: 11px; letter-spacing: .18em; color: #e2e8f0; }
+    .server-tile .srv-dot { width: 8px; height: 8px; border-radius: 50%; flex: none; background: #94a3b8; }
+    .server-tile.on { border-color: rgba(52, 211, 153, 0.35); }
+    .server-tile.on .srv-dot { background: #6ee7b7; box-shadow: 0 0 12px rgba(52, 211, 153, 0.8); animation: pulse 2.6s ease-in-out infinite; }
+    .server-tile.off { border-color: rgba(251, 113, 133, 0.25); }
+    .server-tile.off .srv-dot { background: #fb7185; }
+    .server-tile .srv-state { margin-left: auto; font-family: ui-monospace, monospace; font-size: 10px; letter-spacing: .16em; font-style: normal; }
+    .server-tile.on .srv-state { color: #6ee7b7; }
+    .server-tile.off .srv-state { color: #fb7185; }
+    .server-tile.unk .srv-state { color: #94a3b8; }
+
+    /* sections: steps / features / faq */
+    .section { margin: 56px auto 0; max-width: 1120px; }
+    .section-head { text-align: center; margin-bottom: 30px; }
+    .section-head .kicker { font-size: 10px; font-family: ui-monospace, monospace; letter-spacing: 0.24em; color: var(--cyan); }
+    .section-head h2 { margin-top: 10px; font-family: 'Cinzel', serif; font-size: 30px; font-weight: 600; color: #fff; }
+    .section-head p { margin-top: 10px; font-size: 15px; color: #94a3b8; }
+    .steps-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+    @media (min-width: 768px) { .steps-grid { grid-template-columns: repeat(3, 1fr); } }
+    .step {
+      position: relative;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(2, 6, 23, 0.45);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 26px 22px 22px;
+    }
+    .step-num {
+      width: 38px; height: 38px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 50%;
+      border: 1px solid rgba(250, 204, 21, 0.5);
+      background: rgba(250, 204, 21, 0.12);
+      color: var(--cyan);
+      font-family: 'Cinzel', serif;
+      font-weight: 800; font-size: 16px;
+      box-shadow: 0 0 18px rgba(234, 179, 8, 0.2);
+    }
+    .step h3 { margin-top: 16px; font-size: 17px; font-weight: 700; color: #fff; }
+    .step p { margin-top: 6px; font-size: 13px; line-height: 1.6; color: #94a3b8; }
+    .features-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+    @media (min-width: 640px) { .features-grid { grid-template-columns: repeat(2, 1fr); } }
+    .feature {
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.05);
+      border-radius: 18px;
+      padding: 22px;
+      transition: border-color .25s, background .25s;
+    }
+    .feature:hover { border-color: rgba(250, 204, 21, 0.35); background: rgba(250, 204, 21, 0.08); }
+    .feature .f-icon {
+      width: 40px; height: 40px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 12px;
+      border: 1px solid rgba(250, 204, 21, 0.3);
+      background: rgba(250, 204, 21, 0.1);
+      color: var(--cyan);
+      font-size: 18px;
+    }
+    .feature h3 { margin-top: 14px; font-size: 15px; font-weight: 700; color: #fff; }
+    .feature p { margin-top: 4px; font-size: 12px; color: #94a3b8; }
+    .faq-list { max-width: 720px; margin: 0 auto; display: grid; gap: 10px; }
+    .faq-item {
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(2, 6, 23, 0.45);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .faq-item summary {
+      list-style: none;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 16px 18px;
+      cursor: pointer;
+      font-size: 14px; font-weight: 600; color: #e2e8f0;
+    }
+    .faq-item summary::-webkit-details-marker { display: none; }
+    .faq-item summary::after { content: '+'; font-size: 18px; color: var(--cyan); transition: transform .2s; }
+    .faq-item[open] summary::after { transform: rotate(45deg); }
+    .faq-item .faq-a { padding: 0 18px 16px; font-size: 13px; line-height: 1.65; color: #94a3b8; }
+
+    /* footer */
+    footer {
+      margin-top: 64px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      background: rgba(2, 6, 23, 0.3);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      padding: 16px 28px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 8px;
+      font-size: 9px; font-family: ui-monospace, monospace; letter-spacing: 0.16em;
+      color: #94a3b8;
+    }
+    footer .cyan { color: var(--cyan); }
+    footer .ver { color: #64748b; }
+
+    /* admin modal */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 50;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      padding: 16px;
+    }
+    .modal {
+      position: relative;
+      width: 100%; max-width: 480px;
+      max-height: 90vh; overflow-y: auto;
+      background: rgba(2, 6, 23, 0.92);
+      border: 1px solid rgba(250, 204, 21, 0.3);
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: 0 0 50px rgba(6, 182, 212, 0.25);
+      animation: fadeIn 380ms ease-out both;
+    }
+    .modal-close {
+      position: absolute; top: 16px; right: 16px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #94a3b8;
+      border-radius: 50%;
+      width: 32px; height: 32px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    .modal-close:hover { color: #fff; }
+    .modal h3 { font-family: 'Cinzel', serif; font-size: 20px; font-weight: 700; color: #fff; }
+    .modal-sub { margin-top: 6px; font-size: 11px; font-family: ui-monospace, monospace; letter-spacing: 0.1em; color: #94a3b8; }
+    .modal label { display: block; margin: 18px 0 8px; font-size: 10px; font-family: ui-monospace, monospace; letter-spacing: 0.18em; color: var(--cyan); }
+    .modal input, .modal textarea {
+      width: 100%;
+      background: rgba(0,0,0,0.6);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 12px;
+      padding: 12px 14px;
+      color: #fff;
+      font-family: ui-monospace, monospace;
+      font-size: 13px;
+      outline: none;
+    }
+    .modal input:focus, .modal textarea:focus { border-color: rgba(250, 204, 21, 0.7); }
+    .modal textarea { resize: vertical; min-height: 60px; }
+    .modal .btn-primary {
+      margin-top: 16px;
+      width: 100%;
+      background: var(--cyan-dim);
+      color: #020617;
+      border: none;
+      border-radius: 12px;
+      padding: 13px;
+      font-family: ui-monospace, monospace;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.14em;
+      cursor: pointer;
+    }
+    .modal .btn-primary:hover { background: #fde68a; }
+    .modal .btn-ghost {
+      margin-top: 12px;
+      flex: 1;
+      background: rgba(250, 204, 21, 0.1);
+      border: 1px solid rgba(250, 204, 21, 0.3);
+      color: var(--cyan);
+      border-radius: 12px;
+      padding: 13px;
+      font-family: ui-monospace, monospace;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.12em;
+      cursor: pointer;
+    }
+    .modal .btn-ghost:hover { background: rgba(250, 204, 21, 0.2); }
+    .modal .btn-danger {
+      margin-top: 12px;
+      flex: 1;
+      background: rgba(244, 63, 94, 0.12);
+      border: 1px solid rgba(244, 63, 94, 0.4);
+      color: #fda4af;
+      border-radius: 12px;
+      padding: 13px;
+      font-family: ui-monospace, monospace;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.12em;
+      cursor: pointer;
+    }
+    .admin-btns { display: flex; gap: 10px; }
+    .admin-row {
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 12px;
+      font-family: ui-monospace, monospace;
+      color: #cbd5e1;
+      margin-top: 12px;
+    }
+    .admin-row b { color: var(--cyan); font-weight: 600; }
+    .admin-msg { margin-top: 14px; font-size: 12px; line-height: 1.5; color: #a7f3d0; }
+    .admin-msg.error { color: #fda4af; }
+    .admin-note { margin-top: 14px; font-size: 11px; line-height: 1.6; color: #64748b; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 12px; }
+    .admin-error { margin-top: 10px; font-size: 12px; color: #fda4af; }
+
+    /* country picker (crasher-style) */
+    .country-trigger {
+      width: 100%; display: flex; align-items: center; justify-content: space-between;
+      background: rgba(0,0,0,0.35);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 12px; padding: 14px 16px;
+      color: #fff; font-size: 13px; font-family: ui-monospace, monospace;
+      cursor: pointer; transition: border-color .2s, box-shadow .2s;
+    }
+    .country-trigger:hover { border-color: rgba(250, 204, 21,0.6); }
+    .country-trigger .caret { color: var(--cyan); font-size: 10px; }
+    .country-trigger .sel-flag { font-size: 15px; margin-right: 8px; }
+    .country-trigger .sel-name { color: #e2e8f0; }
+    .country-search-input {
+      width: 100%; margin-top: 14px; box-sizing: border-box;
+      background: rgba(0,0,0,0.6);
+      border: 1px solid rgba(255,255,255,0.2); border-radius: 12px;
+      padding: 12px 14px; color: #fff; font-family: ui-monospace, monospace; font-size: 13px; outline: none;
+    }
+    .country-search-input:focus { border-color: rgba(250, 204, 21,0.7); }
+    .country-list { margin-top: 10px; max-height: 260px; overflow-y: auto; }
+    .country-list::-webkit-scrollbar { width: 4px; }
+    .country-list::-webkit-scrollbar-thumb { background: rgba(250, 204, 21,0.4); border-radius: 99px; }
+    .country-option {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: 10px; cursor: pointer; font-size: 13px; color: #cbd5e1;
+      transition: background .12s;
+    }
+    .country-option:hover { background: rgba(250, 204, 21,0.12); color: #fff; }
+    .country-option .flag { font-size: 16px; }
+    .country-option .cname { flex: 1; }
+    .country-option .ccode { font-family: ui-monospace, monospace; font-size: 11px; color: var(--cyan); }
+    .phone-row { display: flex; gap: 10px; align-items: stretch; }
+    .prefix-wrap { position: relative; flex-shrink: 0; width: 104px; }
+    .prefix-box {
+      height: 100%; min-height: 52px; display: flex; align-items: center; justify-content: center;
+      background: rgba(250, 204, 21,0.07); border: 1px solid rgba(250, 204, 21,0.25);
+      border-radius: 12px; color: var(--cyan); font-family: ui-monospace, monospace;
+      font-weight: 700; font-size: 15px; cursor: text;
+    }
+    .prefix-input {
+      position: absolute; inset: 0; width: 100%; background: transparent; border: none; outline: none;
+      text-align: center; color: var(--cyan); font-family: ui-monospace, monospace;
+      font-weight: 700; font-size: 15px; padding: 0 4px; cursor: text;
+    }
+    .phone-row #phone {
+      flex: 1; min-width: 0; background: rgba(0,0,0,0.35);
+      border: 1px solid rgba(255,255,255,0.15); border-radius: 12px;
+      outline: none; padding: 0 16px; font-size: 14px; font-family: ui-monospace, monospace; color: #fff;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .phone-row #phone:focus { border-color: rgba(250, 204, 21,0.7); box-shadow: 0 0 0 3px rgba(250, 204, 21,0.1); }
+    .phone-row #phone::placeholder { color: #475569; }
+  </style>
+</head>
+<body>
+  <div class="bg-artwork"></div>
+  <div class="grid-overlay"></div>
+
+  <div class="content">
+    <header>
+      <div class="brand">
+        <div class="logo">V</div>
+        <div>
+          <div class="brand-name">
+            <h1>VARNOX XD</h1>
+            <span class="xmd-badge">XMD</span>
+          </div>
+          <p class="brand-sub">BOT INTELLIGENCE / 01</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div class="lang-toggle">
+          <button id="langEn" class="lang-btn">EN</button>
+          <button id="langSw" class="lang-btn">SW</button>
+          <button id="langAr" class="lang-btn">ع</button>
+        </div>
+        <button id="adminBtn" class="admin-btn">⚙ <span data-i18n="adminBtn">ADMIN PANEL</span></button>
+        <div id="botStatus" class="status-pill unk"><span class="dot"></span> <span id="botStatusText" data-i18n="portalOnline">PORTAL ONLINE</span></div>
+      </div>
+    </header>
+
+    <div id="noticeBar" class="notice-bar"></div>
+
+    <main>
+      <div class="grid">
+        <section class="hero">
+          <div class="hero-label"><span class="hairline"></span><span data-i18n="heroLabel">AETHER NETWORK / NODE 07</span></div>
+          <h2><span data-i18n="heroTitleA">Link your</span> <span class="accent" data-i18n="heroTitleB">number.</span></h2>
+          <p data-i18n="heroText">A single premium gateway for your connected bot ecosystem. Pair once, then access the complete Varnox XD XMD command suite from one place.</p>
+          <div class="hero-stats">
+            <div class="stat"><b id="statPaired">—</b><span data-i18n="statPaired">Paired</span></div>
+            <div class="stat"><b id="statOnline">—</b><span data-i18n="statOnline">Online now</span></div>
+            <div class="stat"><b id="statToday">—</b><span data-i18n="statToday">Paired today</span></div>
+          </div>
+          <div class="hero-tags">
+            <span>🔒 <span data-i18n="badge1">IDENTITY VERIFIED</span></span>
+            <span class="sep"></span>
+            <span>🛰 <span data-i18n="badge2">REMOTE NODE READY</span></span>
+          </div>
+        </section>
+
+        <section>
+          <div class="card">
+            <div class="card-top">
+              <div>
+                <div class="card-label"><span class="pulse-dot"></span> <span data-i18n="secureEntry">SECURE ENTRY</span></div>
+                <h3 data-i18n="pairTitle">Pair your device</h3>
+                <p class="desc" data-i18n="pairDesc">Enter your WhatsApp number to request a live link from the Varnox XD node.</p>
+              </div>
+              <div class="lock-icon">🔒</div>
+            </div>
+            <div class="divider"></div>
+
+            <div id="stepKey" style="display:none">
+              <label class="field" for="premiumKey" data-i18n="premKeyLabel">PREMIUM KEY</label>
+              <div class="input-wrap">
+                <span class="plus">🔑</span>
+                <input id="premiumKey" type="text" placeholder="VX-XXXX-XXXX" autocomplete="off" spellcheck="false">
+              </div>
+              <div id="keyError" style="display:none" class="error-box"></div>
+              <button id="keyNextBtn" class="pair-btn">
+                <span id="keyNextLabel" data-i18n="premNext">CONTINUE TO PAIR</span>
+                <span class="arrow">↗</span>
+              </button>
+              <p class="code-hint" data-i18n="premHint">Need a key? Contact the owner.</p>
+            </div>
+
+            <div id="stepPhone">
+              <label class="field" data-i18n="countryLabel">COUNTRY</label>
+              <button type="button" class="country-trigger" id="country-trigger" onclick="openCountryModal()">
+                <span id="country-display"><span class="sel-name">— Select country —</span></span>
+                <span class="caret">▾</span>
+              </button>
+              <label class="field" for="phone" style="margin-top:20px" data-i18n="phoneLabel">WHATSAPP NUMBER</label>
+              <div class="phone-row">
+                <div class="prefix-wrap">
+                  <div class="prefix-box" id="prefix-display">+</div>
+                  <input class="prefix-input" type="text" id="prefix-input" value="" placeholder="+" oninput="onPrefixInput(this.value)" maxlength="6" inputmode="numeric">
+                </div>
+                <input id="phone" type="tel" placeholder="700 000 000" inputmode="numeric" autocomplete="tel">
+              </div>
+              <div id="error" style="display:none" class="error-box"></div>
+              <button id="pairBtn" class="pair-btn">
+                <span id="pairBtnLabel" data-i18n="pairBtn">⚡ GENERATE PAIRING CODE</span>
+                <span class="arrow">↗</span>
+              </button>
+            </div>
+
+            <div id="stepCode" style="display:none">
+              <div class="code-panel">
+                <div class="panel-head"><span>◉ <span data-i18n="liveCode">LIVE PAIRING CODE</span></span><span class="ready" data-i18n="readyTag">READY</span></div>
+                <div class="code-box" id="codeText">…</div>
+                <button id="copyBtn" class="copy-btn" data-i18n="copyBtn">⧉ COPY CODE TO LINK</button>
+                <p class="code-hint"><span data-i18n="codeHint">WhatsApp &gt; Linked Devices &gt; Link with phone number instead.</span><br><span data-i18n="codeExpires">The code expires in</span> <span id="countdown">5:00</span>.</p>
+              </div>
+            </div>
+
+            <div id="stepWaiting" style="display:none" class="waiting-box">
+              <span class="spin"></span> <span id="waitText" data-i18n="waiting">WAITING FOR THE BOT TO GENERATE YOUR CODE</span>
+            </div>
+
+            <div id="stepDone" style="display:none" class="connected-box">
+              <div class="head"><span data-i18n="connectedHead">✓ DEVICE CONNECTED</span><span data-i18n="liveTag">LIVE</span></div>
+              <p data-i18n="connectedText">Your number is now linked to the Varnox XD node.</p>
+            </div>
+
+            <div class="card-foot">
+              <span data-i18n="portalFoot">PAIRING PORTAL</span>
+              <span class="secure" data-i18n="secureFoot">HTTPS / ENCRYPTED</span>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <section class="section">
+        <div class="section-head">
+          <div class="kicker">◉ <span data-i18n="serverTitle">SERVER STATUS</span></div>
+          <h2 data-i18n="serverHead">Bot servers</h2>
+        </div>
+        <div id="serverGrid" class="server-grid">
+          <div class="server-tile unk" data-server="1"><span class="srv-dot"></span><b>SERVER 01</b><em class="srv-state">—</em></div>
+          <div class="server-tile unk" data-server="2"><span class="srv-dot"></span><b>SERVER 02</b><em class="srv-state">—</em></div>
+          <div class="server-tile unk" data-server="3"><span class="srv-dot"></span><b>SERVER 03</b><em class="srv-state">—</em></div>
+        </div>
+      </section>
+
+      <div class="badges">
+        <span class="badge"><span class="b-dot"></span> <span data-i18n="badge3">24/7 UPTIME</span></span>
+        <span class="badge"><span class="b-dot"></span> <span data-i18n="badge4">AES ENCRYPTED</span></span>
+        <span class="badge"><span class="b-dot"></span> <span data-i18n="badge5">OFFICIAL BOT</span></span>
+      </div>
+
+      <section class="section">
+        <div class="section-head">
+          <div class="kicker" data-i18n="stepsKicker">HOW IT WORKS</div>
+          <h2 data-i18n="stepsTitle">How to pair</h2>
+          <p data-i18n="stepsSub">Three steps and you are live.</p>
+        </div>
+        <div class="steps-grid">
+          <div class="step">
+            <div class="step-num">1</div>
+            <h3 data-i18n="step1t">Enter your number</h3>
+            <p data-i18n="step1d">Type your WhatsApp number with country code.</p>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <h3 data-i18n="step2t">Enter the code</h3>
+            <p data-i18n="step2d">WhatsApp &gt; Linked Devices &gt; Link with phone number.</p>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <h3 data-i18n="step3t">Connected</h3>
+            <p data-i18n="step3d">The portal confirms it and your session is saved.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <div class="kicker" data-i18n="featKicker">COMMAND ECOSYSTEM</div>
+          <h2 data-i18n="featTitle">Everything in one place.</h2>
+          <p data-i18n="featSub">The complete Varnox XD XMD command suite.</p>
+        </div>
+        <div class="features-grid">
+          <div class="feature">
+            <div class="f-icon">🛡</div>
+            <h3 data-i18n="feat1t">Group security</h3>
+            <p data-i18n="feat1d">Moderation &amp; protection</p>
+          </div>
+          <div class="feature">
+            <div class="f-icon">🤖</div>
+            <h3 data-i18n="feat2t">AI command suite</h3>
+            <p data-i18n="feat2d">Tools, chat &amp; automation</p>
+          </div>
+          <div class="feature">
+            <div class="f-icon">🎬</div>
+            <h3 data-i18n="feat3t">Media engine</h3>
+            <p data-i18n="feat3d">Download &amp; conversion</p>
+          </div>
+          <div class="feature">
+            <div class="f-icon">✨</div>
+            <h3 data-i18n="feat4t">Creative tools</h3>
+            <p data-i18n="feat4d">Stickers, reactions &amp; fun</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <div class="kicker" data-i18n="faqKicker">SUPPORT</div>
+          <h2 data-i18n="faqTitle">Frequently asked questions</h2>
+        </div>
+        <div class="faq-list">
+          <details class="faq-item">
+            <summary data-i18n="q1">Why is no code appearing?</summary>
+            <div class="faq-a" data-i18n="a1">The bot must be running on the server. If you see "already paired", that number already has a session — unpair it first.</div>
+          </details>
+          <details class="faq-item">
+            <summary data-i18n="q2">What if the code expires?</summary>
+            <div class="faq-a" data-i18n="a2">Codes last 5 minutes. Click Pair again to generate a fresh one.</div>
+          </details>
+          <details class="faq-item">
+            <summary data-i18n="q3">What does "already paired" mean?</summary>
+            <div class="faq-a" data-i18n="a3">That WhatsApp number is already linked to the bot. Delete or unpair the existing session before pairing again.</div>
+          </details>
+          <details class="faq-item">
+            <summary data-i18n="q4">Can one number pair twice?</summary>
+            <div class="faq-a" data-i18n="a4">No — one WhatsApp number links to the bot once at a time.</div>
+          </details>
+          <details class="faq-item">
+            <summary data-i18n="q5">Is my number safe?</summary>
+            <div class="faq-a" data-i18n="a5">Your session is encrypted and stored in the database. Only you can pair your number.</div>
+          </details>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span data-i18n="footerRights">© 2026 VARNOX XD ECOSYSTEM / ALL RIGHTS RESERVED</span>
+      <span class="ver">VARNOX XD v4.0.0</span>
+      <span class="cyan" data-i18n="footerBridge">NEON BRIDGE • SECURE ENTRY</span>
+    </footer>
+  </div>
+
+  <!-- Admin Panel -->
+  <div id="adminModal" class="modal-overlay" style="display:none">
+    <div class="modal">
+      <button id="adminClose" class="modal-close">✕</button>
+      <h3 data-i18n="adminTitle">Varnox XD Admin Suite</h3>
+      <p class="modal-sub" data-i18n="adminSub">Neon database &amp; site management</p>
+
+      <div id="adminLogin">
+        <label for="adminPassword" data-i18n="adminPass">ADMIN PASSWORD</label>
+        <input type="password" id="adminPassword" placeholder="••••••••" autocomplete="current-password">
+        <p class="admin-error" id="adminLoginError" style="display:none"></p>
+        <button id="adminUnlock" class="btn-primary" data-i18n="unlock">UNLOCK ADMIN</button>
+      </div>
+
+      <div id="adminPanel" style="display:none">
+        <div class="admin-row"><span data-i18n="currentDb">Current database</span><b id="adminDbHost">—</b></div>
+
+        <label for="adminNewUrl" data-i18n="newDb">NEW NEON CONNECTION STRING</label>
+        <input type="text" id="adminNewUrl" placeholder="postgresql://user:pass@ep-xxx.aws.neon.tech/neondb?sslmode=require" spellcheck="false">
+
+        <div class="admin-btns">
+          <button id="adminTest" class="btn-ghost" data-i18n="testConn">TEST CONNECTION</button>
+          <button id="adminSave" class="btn-danger" data-i18n="saveDb">SAVE &amp; REDEPLOY</button>
+        </div>
+
+        <label for="adminNotice" data-i18n="noticeLabel">LANDING NOTICE</label>
+        <textarea id="adminNotice" placeholder="e.g. 🔧 Maintenance tonight 23:00–23:30"></textarea>
+        <button id="adminNoticeSave" class="btn-ghost" data-i18n="noticeSave">SAVE NOTICE</button>
+
+        <div class="divider"></div>
+        <label data-i18n="premSection">PREMIUM MODE</label>
+        <div class="admin-row"><span data-i18n="premModeLabel">Mode</span><b id="adminPremMode">—</b></div>
+        <div class="admin-row"><span data-i18n="premKeysLabel">Keys left / used</span><b id="adminPremCount">—</b></div>
+        <div class="admin-btns">
+          <button id="adminPremToggle" class="btn-ghost">—</button>
+          <button id="adminPremGen" class="btn-ghost" data-i18n="premGen">GENERATE 5 KEYS</button>
+        </div>
+        <textarea id="adminKeysOut" readonly placeholder="Generated keys appear here…"></textarea>
+        <button id="adminKeysRefresh" class="btn-ghost" data-i18n="premRefresh">REFRESH KEYS</button>
+
+        <p class="admin-msg" id="adminMsg" style="display:none"></p>
+        <p class="admin-note" data-i18n="adminNote">After saving a database, also update NEON_DATABASE_URL on the Pterodactyl panel (or in settings.js) — otherwise the bot keeps using the old database. The site redeploys automatically (~30s).</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Country picker modal -->
+  <div id="countryModal" class="modal-overlay" style="display:none" onclick="if(event.target===this) closeCountryModal()">
+    <div class="modal">
+      <button id="countryClose" class="modal-close" onclick="closeCountryModal()">✕</button>
+      <h3 data-i18n="countryModalTitle">Select country</h3>
+      <p class="modal-sub">Tap a country to set its dial code automatically.</p>
+      <input class="country-search-input" type="text" id="country-search" placeholder="Search country…" oninput="filterCountries(this.value)" autocomplete="off" spellcheck="false">
+      <div class="country-list" id="country-list"></div>
+    </div>
+  </div>
+
+  <script>
+    /* ── i18n ─────────────────────────────────────── */
+    const L = {
+      en: {
+        adminBtn: 'ADMIN PANEL', heroLabel: 'AETHER NETWORK / NODE 07', heroTitleA: 'Link your', heroTitleB: 'number.',
+        heroText: 'A single premium gateway for your connected bot ecosystem. Pair once, then access the complete Varnox XD XMD command suite from one place.',
+        statPaired: 'Paired', statOnline: 'Online now', statToday: 'Paired today',
+        badge1: 'IDENTITY VERIFIED', badge2: 'REMOTE NODE READY', badge3: '24/7 UPTIME', badge4: 'AES ENCRYPTED', badge5: 'OFFICIAL BOT',
+        secureEntry: 'SECURE ENTRY', pairTitle: 'Pair your device', pairDesc: 'Enter your WhatsApp number to request a live link from the Varnox XD node.',
+        phoneLabel: 'WHATSAPP NUMBER', countryLabel: 'COUNTRY', countryModalTitle: 'Select country', countrySearch: 'Search country…', countryPlaceholder: '— Select country —', pairBtn: '⚡ GENERATE PAIRING CODE', requesting: 'REQUESTING LIVE LINK',
+        liveCode: 'LIVE PAIRING CODE', readyTag: 'READY', copyBtn: '⧉ COPY CODE TO LINK', copied: '✓ COPIED TO CLIPBOARD',
+        codeHint: 'WhatsApp > Linked Devices > Link with phone number instead.', codeExpires: 'The code expires in',
+        waiting: 'WAITING FOR THE BOT TO GENERATE YOUR CODE', connectedHead: '✓ DEVICE CONNECTED', liveTag: 'LIVE',
+        connectedText: 'Your number is now linked to the Varnox XD node.', portalFoot: 'PAIRING PORTAL', secureFoot: 'HTTPS / ENCRYPTED',
+        portalOnline: 'PORTAL ONLINE', botOnline: 'BOT ONLINE', botOffline: 'BOT OFFLINE',
+        serverTitle: 'SERVER STATUS', serverHead: 'BOT SERVERS', serverOnline: 'ONLINE', serverOffline: 'OFFLINE',
+        stepsKicker: 'HOW IT WORKS', stepsTitle: 'How to pair', stepsSub: 'Three steps and you are live.',
+        step1t: 'Enter your number', step1d: 'Type your WhatsApp number with country code.',
+        step2t: 'Enter the code', step2d: 'WhatsApp > Linked Devices > Link with phone number.',
+        step3t: 'Connected', step3d: 'The portal confirms it and your session is saved.',
+        featKicker: 'COMMAND ECOSYSTEM', featTitle: 'Everything in one place.', featSub: 'The complete Varnox XD XMD command suite.',
+        feat1t: 'Group security', feat1d: 'Moderation & protection', feat2t: 'AI command suite', feat2d: 'Tools, chat & automation',
+        feat3t: 'Media engine', feat3d: 'Download & conversion', feat4t: 'Creative tools', feat4d: 'Stickers, reactions & fun',
+        faqKicker: 'SUPPORT', faqTitle: 'Frequently asked questions',
+        q1: 'Why is no code appearing?', a1: 'The bot must be running on the server. If you see "already paired", that number already has a session — unpair it first.',
+        q2: 'What if the code expires?', a2: 'Codes last 5 minutes. Click Pair again to generate a fresh one.',
+        q3: 'What does "already paired" mean?', a3: 'That WhatsApp number is already linked to the bot. Delete or unpair the existing session before pairing again.',
+        q4: 'Can one number pair twice?', a4: 'No — one WhatsApp number links to the bot once at a time.',
+        q5: 'Is my number safe?', a5: 'Your session is encrypted and stored in the database. Only you can pair your number.',
+        footerRights: '© 2026 VARNOX XD ECOSYSTEM / ALL RIGHTS RESERVED', footerBridge: 'NEON BRIDGE • SECURE ENTRY',
+        adminTitle: 'Varnox XD Admin Suite', adminSub: 'Neon database & site management', adminPass: 'ADMIN PASSWORD', unlock: 'UNLOCK ADMIN',
+        currentDb: 'Current database', newDb: 'NEW NEON CONNECTION STRING', testConn: 'TEST CONNECTION', saveDb: 'SAVE & REDEPLOY',
+        noticeLabel: 'LANDING NOTICE', noticeSave: 'SAVE NOTICE',
+        premSection: 'PREMIUM MODE', premModeLabel: 'Mode', premKeysLabel: 'Keys left / used',
+        premGen: 'GENERATE 5 KEYS', premRefresh: 'REFRESH KEYS',
+        premKeyLabel: 'PREMIUM KEY', premNext: 'CONTINUE TO PAIR', premHint: 'Need a key? Contact the owner.',
+        premOn: 'ON', premOff: 'OFF', premEnable: 'ENABLE PREMIUM', premDisable: 'DISABLE PREMIUM',
+        adminNote: 'After saving a database, also update NEON_DATABASE_URL on the Pterodactyl panel (or in settings.js) — otherwise the bot keeps using the old database. The site redeploys automatically (~30s).'
+      },
+      sw: {
+        adminBtn: 'ADMIN PANEL', heroLabel: 'AETHER NETWORK / NODE 07', heroTitleA: 'Unganisha', heroTitleB: 'nambari yako.',
+        heroText: 'Lango moja la kipekee kwa mfumo wako wa bot. Unganisha mara moja, kisha tumia amri zote za Varnox XD XMD mahali pamoja.',
+        statPaired: 'Zimeunganishwa', statOnline: 'Mtandaoni sasa', statToday: 'Leo',
+        badge1: 'UTAMBULISHO UMEHIFADHIWA', badge2: 'NODE IKO TAYARI', badge3: 'INAFANYA KAZI 24/7', badge4: 'AES IMEHIFADHIWA', badge5: 'BOT RASMI',
+        secureEntry: 'KIINGILIO SALAMA', pairTitle: 'Unganisha kifaa chako', pairDesc: 'Weka nambari yako ya WhatsApp kupata kiungo cha moja kwa moja kutoka kwa node ya Varnox XD.',
+        phoneLabel: 'NAMBARI YA WHATSAPP', countryLabel: 'NCHI', countryModalTitle: 'Chagua nchi', countrySearch: 'Tafuta nchi…', countryPlaceholder: '— Chagua nchi —', pairBtn: '⚡ PATA CODE YA KUUNGANISHA', requesting: 'TUNATAFUTA KIUNGO…',
+        liveCode: 'CODE YA KUUNGANISHA', readyTag: 'TAYARI', copyBtn: '⧉ NAKILI CODE', copied: '✓ IMENAKILIWA',
+        codeHint: 'WhatsApp > Linked Devices > Link with phone number.', codeExpires: 'Code inaisha baada ya',
+        waiting: 'TUNASUBIRI BOT KUTOA CODE YAKO', connectedHead: '✓ KIFAA KIMEUNGANISHWA', liveTag: 'MTANDAONI',
+        connectedText: 'Nambari yako sasa imeunganishwa na node ya Varnox XD.', portalFoot: 'MLANGO WA KUUNGANISHA', secureFoot: 'HTTPS / IMEHIFADHIWA',
+        portalOnline: 'PORTAL IKO WAZI', botOnline: 'BOT IKO MTANDAONI', botOffline: 'BOT HAIPO MTANDAONI',
+        serverTitle: 'HALI YA SERVER', serverHead: 'SERVA ZA BOT', serverOnline: 'ONLINE', serverOffline: 'OFFLINE',
+        stepsKicker: 'JINSI INAVYOFANYA KAZI', stepsTitle: 'Jinsi ya kuunganisha', stepsSub: 'Hatua tatu na umeshaanza.',
+        step1t: 'Weka nambari yako', step1d: 'Andika nambari ya WhatsApp pamoja na code ya nchi.',
+        step2t: 'Weka code', step2d: 'WhatsApp > Linked Devices > Link with phone number.',
+        step3t: 'Umeunganishwa', step3d: 'Portal inathibitisha na session yako imehifadhiwa.',
+        featKicker: 'AMRI ZOTE', featTitle: 'Kila kitu mahali pamoja.', featSub: 'Amri zote za Varnox XD XMD.',
+        feat1t: 'Usalama wa kikundi', feat1d: 'Usimamizi na ulinzi', feat2t: 'Mfumo wa AI', feat2d: 'Zana, mazungumzo na otomatiki',
+        feat3t: 'Injini ya media', feat3d: 'Kupakua na kubadilisha', feat4t: 'Zana za ubunifu', feat4d: 'Stika, majibu na burudani',
+        faqKicker: 'USAIDIZI', faqTitle: 'Maswali yanayoulizwa mara kwa mara',
+        q1: 'Kwa nini hakuna code inayoonekana?', a1: 'Bot lazima iwe inafanya kazi kwenye seva. Ukiona "already paired", nambari hiyo tayari imeunganishwa — ondoa session kwanza.',
+        q2: 'Vipi ikiwa code imeisha?', a2: 'Code hudumu dakika 5. Bonyeza Pair tena kupata mpya.',
+        q3: '"Already paired" inamaanisha nini?', a3: 'Nambari hiyo ya WhatsApp tayari imeunganishwa na bot. Futa session iliyopo kabla ya kuunganisha tena.',
+        q4: 'Je, nambari moja inaweza kuunganishwa mara mbili?', a4: 'Hapana — nambari moja ya WhatsApp inaunganishwa na bot mara moja tu.',
+        q5: 'Nambari yangu ni salama?', a5: 'Session yako imehifadhiwa kwa usalama kwenye database. Ni wewe tu unayeweza kuunganisha nambari yako.',
+        footerRights: '© 2026 VARNOX XD ECOSYSTEM / HAKI ZOTE ZIMEHIFADHIWA', footerBridge: 'NEON BRIDGE • KIINGILIO SALAMA',
+        adminTitle: 'Varnox XD Admin Suite', adminSub: 'Usimamizi wa Neon database na tovuti', adminPass: 'NYWILO YA ADMIN', unlock: 'FUNGUA ADMIN',
+        currentDb: 'Database ya sasa', newDb: 'NYWILO MPYA YA NEON', testConn: 'JARIBU MUUNGANO', saveDb: 'HIFADHI & REDEPLOY',
+        noticeLabel: 'TANGAZO LA UKURASA', noticeSave: 'HIFADHI TANGAZO',
+        premSection: 'HALI YA PREMIUM', premModeLabel: 'Hali', premKeysLabel: 'Funguo zilizobaki / zilizotumika',
+        premGen: 'TOA FUNGUO 5', premRefresh: 'ONESHA FUNGUO',
+        premKeyLabel: 'FUNGUO LA PREMIUM', premNext: 'ENDELEA KUUNGANISHA', premHint: 'Unahitaji funguo? Wasiliana na mmiliki.',
+        premOn: 'WASHA', premOff: 'ZIMA', premEnable: 'WASHA PREMIUM', premDisable: 'ZIMA PREMIUM',
+        adminNote: 'Baada ya kuhifadhi database, pia badilisha NEON_DATABASE_URL kwenye paneli (au settings.js) — la sivyo bot itaendelea kutumia database ya zamani. Tovuti inajipanga upya yenyewe (~sekunde 30).'
+      },
+      ar: {
+        adminBtn: 'لوحة التحكم', heroLabel: 'شبكة الأثير / العقدة 07', heroTitleA: 'اربط', heroTitleB: 'رقمك.',
+        heroText: 'بوابة واحدة مميزة لنظام البوت الخاص بك. اربط مرة واحدة، ثم استخدم جميع أوامر Varnox XD XMD من مكان واحد.',
+        statPaired: 'تم الربط', statOnline: 'متصل الآن', statToday: 'اليوم',
+        badge1: 'تم التحقق من الهوية', badge2: 'العقدة جاهزة', badge3: 'يعمل 24/7', badge4: 'تشفير AES', badge5: 'بوت رسمي',
+        secureEntry: 'دخول آمن', pairTitle: 'اربط جهازك', pairDesc: 'أدخل رقم واتساب الخاص بك لطلب رابط مباشر من عقدة فارنوكس.',
+        phoneLabel: 'رقم واتساب', countryLabel: 'الدولة', countryModalTitle: 'اختر الدولة', countrySearch: 'ابحث عن الدولة…', countryPlaceholder: '— اختر الدولة —', pairBtn: '⚡ إنشاء رمز الربط', requesting: 'جارٍ الطلب…',
+        liveCode: 'رمز الربط', readyTag: 'جاهز', copyBtn: '⧉ نسخ الرمز', copied: '✓ تم النسخ',
+        codeHint: 'واتساب > الأجهزة المرتبطة > الربط برقم الهاتف.', codeExpires: 'ينتهي الرمز خلال',
+        waiting: 'بانتظار البوت لإنشاء الرمز', connectedHead: '✓ تم ربط الجهاز', liveTag: 'متصل',
+        connectedText: 'تم ربط رقمك بعقدة فارنوكس.', portalFoot: 'بوابة الربط', secureFoot: 'HTTPS / مشفر',
+        portalOnline: 'البوابة جاهزة', botOnline: 'البوت متصل', botOffline: 'البوت غير متصل',
+        serverTitle: 'حالة السيرفرات', serverHead: 'سيرفرات البوت', serverOnline: 'متصل', serverOffline: 'غير متصل',
+        stepsKicker: 'كيف يعمل', stepsTitle: 'كيف تربط', stepsSub: 'ثلاث خطوات وتبدأ.',
+        step1t: 'أدخل رقمك', step1d: 'اكتب رقم واتساب مع رمز الدولة.',
+        step2t: 'أدخل الرمز', step2d: 'واتساب > الأجهزة المرتبطة > الربط برقم الهاتف.',
+        step3t: 'تم الربط', step3d: 'تؤكد البوابة ويتم حفظ جلستك.',
+        featKicker: 'نظام الأوامر', featTitle: 'كل شيء في مكان واحد.', featSub: 'جميع أوامر Varnox XD XMD.',
+        feat1t: 'حماية المجموعات', feat1d: 'إدارة وحماية', feat2t: 'حزمة الذكاء الاصطناعي', feat2d: 'أدوات ومحادثة وأتمتة',
+        feat3t: 'محرك الوسائط', feat3d: 'تحميل وتحويل', feat4t: 'أدوات إبداعية', feat4d: 'ملصقات وردود وتسلية',
+        faqKicker: 'الدعم', faqTitle: 'الأسئلة الشائعة',
+        q1: 'لماذا لا يظهر رمز؟', a1: 'يجب أن يكون البوت يعمل على الخادم. إذا رأيت "already paired" فهذا الرقم مرتبط مسبقاً — قم بإلغاء الربط أولاً.',
+        q2: 'ماذا لو انتهت صلاحية الرمز؟', a2: 'الرمز صالح لمدة 5 دقائق. اضغط على الربط مجدداً للحصول على رمز جديد.',
+        q3: 'ماذا تعني "already paired"؟', a3: 'هذا الرقم مرتبط بالفعل بالبوت. احذف الجلسة الحالية قبل إعادة الربط.',
+        q4: 'هل يمكن ربط نفس الرقم مرتين؟', a4: 'لا — رقم واتساب واحد يرتبط بالبوت مرة واحدة فقط.',
+        q5: 'هل رقمي آمن؟', a5: 'جلستك مشفرة ومحفوظة في قاعدة البيانات. أنت فقط من يربط رقمك.',
+        footerRights: '© 2026 VARNOX XD ECOSYSTEM / جميع الحقوق محفوظة', footerBridge: 'NEON BRIDGE • دخول آمن',
+        adminTitle: 'لوحة تحكم فارنوكس', adminSub: 'إدارة قاعدة البيانات والموقع', adminPass: 'كلمة مرور المشرف', unlock: 'فتح لوحة التحكم',
+        currentDb: 'قاعدة البيانات الحالية', newDb: 'رابط Neon الجديد', testConn: 'اختبار الاتصال', saveDb: 'حفظ وإعادة نشر',
+        noticeLabel: 'إشعار الصفحة الرئيسية', noticeSave: 'حفظ الإشعار',
+        premSection: 'الوضع المميز', premModeLabel: 'الحالة', premKeysLabel: 'المفاتيح المتبقية / المستخدمة',
+        premGen: 'توليد 5 مفاتيح', premRefresh: 'تحديث المفاتيح',
+        premKeyLabel: 'المفتاح المميز', premNext: 'متابعة الربط', premHint: 'تحتاج مفتاحاً؟ تواصل مع المالك.',
+        premOn: 'مفعل', premOff: 'معطل', premEnable: 'تفعيل الوضع المميز', premDisable: 'إيقاف الوضع المميز',
+        adminNote: 'بعد حفظ قاعدة البيانات، حدّث أيضاً NEON_DATABASE_URL على لوحة Pterodactyl (أو في settings.js) — وإلا سيستمر البوت في استخدام قاعدة البيانات القديمة. يتم إعادة نشر الموقع تلقائياً (~30 ثانية).'
+      }
+    };
+    let lang = localStorage.getItem('varnoxLang') || 'en';
+    const t = (k) => (L[lang] && L[lang][k]) || L.en[k] || k;
+    function applyLang() {
+      document.documentElement.lang = lang;
+      document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+      document.querySelectorAll('[data-i18n]').forEach((el) => {
+        el.textContent = t(el.getAttribute('data-i18n'));
+      });
+      document.querySelectorAll('.lang-btn').forEach((b) => b.classList.remove('active'));
+      (lang === 'en' ? document.getElementById('langEn') : lang === 'sw' ? document.getElementById('langSw') : document.getElementById('langAr')).classList.add('active');
+      const cs = document.getElementById('country-search');
+      if (cs) cs.placeholder = t('countrySearch');
+      const cd = document.getElementById('country-display');
+      const pi = document.getElementById('prefix-input');
+      if (cd && pi && !pi.value) cd.innerHTML = '<span class="sel-name">' + t('countryPlaceholder') + '</span>';
+    }
+    document.getElementById('langEn').onclick = () => { lang = 'en'; localStorage.setItem('varnoxLang', 'en'); applyLang(); };
+    document.getElementById('langSw').onclick = () => { lang = 'sw'; localStorage.setItem('varnoxLang', 'sw'); applyLang(); };
+    document.getElementById('langAr').onclick = () => { lang = 'ar'; localStorage.setItem('varnoxLang', 'ar'); applyLang(); };
+    applyLang();
+
+    /* ── Live stats + notice + bot status ─────────── */
+    async function refreshStats() {
+      try {
+        const res = await fetch('/api/stats');
+        const d = await res.json();
+        if (!res.ok) return;
+        document.getElementById('statPaired').textContent = (d.totalPairs ?? 0).toLocaleString();
+        document.getElementById('statOnline').textContent = (d.onlineNow ?? 0).toLocaleString();
+        document.getElementById('statToday').textContent = (d.today ?? 0).toLocaleString();
+        const pill = document.getElementById('botStatus');
+        const txt = document.getElementById('botStatusText');
+        if (d.botOnline) { pill.className = 'status-pill'; txt.textContent = t('botOnline'); }
+        else { pill.className = 'status-pill off'; txt.textContent = t('botOffline'); }
+        // Server 1..3 heartbeat tiles (offline = no ping for 2 min)
+        const grid = document.getElementById('serverGrid');
+        if (grid && Array.isArray(d.servers)) {
+          d.servers.forEach((s) => {
+            const tile = grid.querySelector('.server-tile[data-server="' + s.id + '"]');
+            if (!tile) return;
+            tile.className = 'server-tile ' + (s.online ? 'on' : 'off');
+            const st = tile.querySelector('.srv-state');
+            st.textContent = s.online ? t('serverOnline') : t('serverOffline');
+          });
+        }
+        const bar = document.getElementById('noticeBar');
+        if (d.notice) { bar.textContent = d.notice; bar.style.display = 'block'; }
+        else { bar.textContent = ''; bar.style.display = 'none'; }
+        // premium mode → show the key step (only when no pairing flow is active)
+        premiumOn = !!d.premiumMode;
+        if (premiumOn && $('stepPhone').style.display !== 'none' && $('stepKey').style.display === 'none' && !requestId) {
+          $('stepKey').style.display = 'block';
+          $('stepPhone').style.display = 'none';
+        } else if (!premiumOn && $('stepKey').style.display === 'block') {
+          $('stepKey').style.display = 'none';
+          $('stepPhone').style.display = 'block';
+        }
+      } catch { /* keep last values */ }
+    }
+    refreshStats();
+    setInterval(refreshStats, 30000);
+
+    /* ── Pairing flow ─────────────────────────────── */
+    let requestId = null;
+    let premiumOn = false;
+    let premiumKey = '';
+    const $ = (id) => document.getElementById(id);
+
+    /* ── Country picker (crasher-style) ──────────── */
+    let countries = [];
+    let selectedCountry = null;
+
+    async function loadCountries() {
+      try {
+        const r = await fetch('/countries.json');
+        countries = await r.json();
+        renderCountryList(countries);
+      } catch (e) { /* country list unavailable */ }
+    }
+
+    function renderCountryList(list) {
+      const el = document.getElementById('country-list');
+      el.innerHTML = list.map(c => `
+        <div class="country-option" onclick="selectCountry('${c.code}','${c.name.replace(/'/g, "\\'")}','${c.flag}')">
+          <span class="flag">${c.flag}</span>
+          <span class="cname">${c.name}</span>
+          <span class="ccode">${c.code}</span>
+        </div>`).join('');
+    }
+
+    function filterCountries(q) {
+      const filtered = q
+        ? countries.filter(c => c.name.toLowerCase().includes(q.toLowerCase()) || c.code.replace(/[^0-9]/g, '').includes(q.replace(/[^0-9]/g, '')))
+        : countries;
+      renderCountryList(filtered);
+    }
+
+    function openCountryModal() {
+      document.getElementById('countryModal').style.display = 'block';
+      const s = document.getElementById('country-search');
+      s.value = '';
+      filterCountries('');
+      setTimeout(() => s.focus(), 80);
+    }
+
+    function closeCountryModal() {
+      document.getElementById('countryModal').style.display = 'none';
+    }
+
+    function selectCountry(code, name, flag) {
+      selectedCountry = { code, name, flag };
+      document.getElementById('country-display').innerHTML =
+        `<span class="sel-flag">${flag}</span><span class="sel-name">${name} (${code})</span>`;
+      document.getElementById('prefix-display').textContent = code;
+      document.getElementById('prefix-input').value = code;
+      closeCountryModal();
+      document.getElementById('phone').focus();
+    }
+
+    function onPrefixInput(val) {
+      let v = val.replace(/[^0-9+]/g, '');
+      if (v && !v.startsWith('+')) v = '+' + v;
+      if (v.length > 6) v = v.slice(0, 6);
+      document.getElementById('prefix-input').value = v;
+      document.getElementById('prefix-display').textContent = v || '+';
+      if (v.length >= 2) {
+        const match = countries.find(c => c.code === v);
+        if (match) {
+          selectedCountry = match;
+          document.getElementById('country-display').innerHTML =
+            `<span class="sel-flag">${match.flag}</span><span class="sel-name">${match.name} (${match.code})</span>`;
+        }
+      }
+    }
+
+    loadCountries();
+
+    // Key step: validate format → reveal phone step
+    $('keyNextBtn').onclick = () => {
+      const key = $('premiumKey').value.trim().toUpperCase();
+      if (!/^VX-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(key)) {
+        $('keyError').textContent = 'Enter a valid key (format: VX-XXXX-XXXX).';
+        $('keyError').style.display = 'block';
+        return;
+      }
+      premiumKey = key;
+      $('keyError').style.display = 'none';
+      $('stepKey').style.display = 'none';
+      $('stepPhone').style.display = 'block';
+    };
+    $('premiumKey').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('keyNextBtn').click(); });
+
+    $('pairBtn').onclick = async () => {
+      const prefix = ($('prefix-input').value || '').replace(/[^0-9]/g, '');
+      const numPart = $('phone').value.replace(/[^0-9]/g, '').replace(/^0+/, '');
+      if (!prefix) return alert('Select your country first');
+      if (numPart.length < 4) return alert('Enter a valid phone number');
+      const phone = prefix + numPart;
+      hideError();
+      setLoading(true);
+      try {
+        const res = await fetch('/api/request', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone, key: premiumKey || undefined })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Request failed');
+        requestId = data.requestId;
+        $('stepPhone').style.display = 'none';
+        $('stepWaiting').style.display = 'flex';
+        startCountdown(data.expiresAt);
+        poll();
+      } catch (err) {
+        showError(err.message);
+        setLoading(false);
+      }
+    };
+
+    function setLoading(on) {
+      $('pairBtn').disabled = on;
+      $('pairBtnLabel').textContent = on ? t('requesting') : t('pairBtn');
+    }
+
+    $('copyBtn').onclick = async () => {
+      const code = $('codeText').textContent;
+      try {
+        await navigator.clipboard.writeText(code);
+        $('copyBtn').textContent = t('copied');
+        setTimeout(() => { $('copyBtn').textContent = t('copyBtn'); }, 2500);
+      } catch (e) {
+        prompt('Copy the code:', code);
+      }
+    };
+
+    function startCountdown(expiresAt) {
+      const end = new Date(expiresAt).getTime();
+      setInterval(() => {
+        const left = Math.max(0, Math.floor((end - Date.now()) / 1000));
+        $('countdown').textContent = `${Math.floor(left / 60)}:${String(left % 60).padStart(2, '0')}`;
+        if (left <= 0) {
+          showError('Code expired. Click Pair again.');
+          location.reload();
+        }
+      }, 1000);
+    }
+
+    async function poll() {
+      const res = await fetch('/api/status?id=' + requestId);
+      const data = await res.json();
+      switch (data.status) {
+        case 'code_generated':
+          if (data.pairing_code) {
+            $('codeText').textContent = data.pairing_code;
+            $('stepWaiting').style.display = 'none';
+            $('stepCode').style.display = 'block';
+          }
+          break;
+        case 'connected':
+          $('stepWaiting').style.display = 'none';
+          $('stepCode').style.display = 'none';
+          $('stepDone').style.display = 'block';
+          refreshStats();
+          return;
+        case 'failed':
+          showError('Pairing failed: ' + (data.error || 'unknown reason'));
+          return;
+        case 'expired':
+          showError('Code expired. Click Pair again.');
+          location.reload();
+          return;
+      }
+      setTimeout(poll, 3000);
+    }
+
+    function showError(msg) {
+      $('error').textContent = msg;
+      $('error').style.display = 'block';
+    }
+    function hideError() {
+      $('error').style.display = 'none';
+    }
+
+    /* ── Admin panel ──────────────────────────────── */
+    let adminPassword = '';
+    const show = (id, on) => { $(id).style.display = on ? 'block' : 'none'; };
+
+    $('adminBtn').onclick = () => { show('adminModal', true); };
+    $('adminClose').onclick = () => { show('adminModal', false); };
+    $('adminModal').onclick = (e) => { if (e.target === $('adminModal')) show('adminModal', false); };
+
+    async function adminCall(action, extra = {}) {
+      const res = await fetch('/api/admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action, password: adminPassword, ...extra }),
+      });
+      return res.json();
+    }
+
+    function adminMsg(msg, isError) {
+      $('adminMsg').textContent = msg;
+      $('adminMsg').className = 'admin-msg' + (isError ? ' error' : '');
+      show('adminMsg', true);
+    }
+
+    $('adminUnlock').onclick = async () => {
+      adminPassword = $('adminPassword').value;
+      if (!adminPassword) return;
+      $('adminLoginError').style.display = 'none';
+      $('adminUnlock').disabled = true;
+      try {
+        const data = await adminCall('status');
+        if (!data.ok) throw new Error(data.error || 'Incorrect password');
+        $('adminDbHost').textContent = data.dbHost;
+        if (data.notice) $('adminNotice').value = data.notice;
+        show('adminLogin', false);
+        show('adminPanel', true);
+        loadPremium();
+      } catch (err) {
+        $('adminLoginError').textContent = err.message;
+        $('adminLoginError').style.display = 'block';
+      } finally {
+        $('adminUnlock').disabled = false;
+      }
+    };
+    $('adminPassword').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('adminUnlock').click(); });
+
+    $('adminTest').onclick = async () => {
+      const url = $('adminNewUrl').value.trim();
+      if (!url) return adminMsg('Paste a connection string first.', true);
+      $('adminTest').disabled = true;
+      adminMsg('Testing connection…');
+      try {
+        const data = await adminCall('test', { url });
+        adminMsg(data.message, !data.ok);
+      } catch (err) { adminMsg(err.message, true); }
+      finally { $('adminTest').disabled = false; }
+    };
+
+    $('adminSave').onclick = async () => {
+      const url = $('adminNewUrl').value.trim();
+      if (!url) return adminMsg('Paste the new connection string first.', true);
+      if (!confirm('Save this as the new database?\n\nThe site will redeploy (~30s).\n\n' + url)) return;
+      $('adminSave').disabled = true;
+      adminMsg('Saving + redeploying…');
+      try {
+        const data = await adminCall('update_database', { url });
+        adminMsg(data.message, !data.ok);
+      } catch (err) { adminMsg(err.message, true); }
+      finally { $('adminSave').disabled = false; }
+    };
+
+    $('adminNoticeSave').onclick = async () => {
+      $('adminNoticeSave').disabled = true;
+      try {
+        const data = await adminCall('update_notice', { notice: $('adminNotice').value });
+        adminMsg(data.message, !data.ok);
+        if (data.ok) refreshStats();
+      } catch (err) { adminMsg(err.message, true); }
+      finally { $('adminNoticeSave').disabled = false; }
+    };
+
+    /* ── Premium mode ──────────────────────────────── */
+    async function loadPremium() {
+      try {
+        const data = await adminCall('get_premium');
+        if (!data.ok) return;
+        $('adminPremMode').textContent = data.mode === 'on' ? t('premOn') : t('premOff');
+        $('adminPremCount').textContent = `${data.keysTotal - data.keysUsed} / ${data.keysUsed}`;
+        $('adminPremToggle').textContent = data.mode === 'on' ? t('premDisable') : t('premEnable');
+        $('adminKeysOut').value = data.recentKeys.length
+          ? data.recentKeys.map((r) => `${r.key}  ·  ${r.status}${r.usedPhone ? '  ·  ' + r.usedPhone : ''}`).join('\n')
+          : 'No keys yet — tap GENERATE 5 KEYS.';
+      } catch (err) { adminMsg(err.message, true); }
+    }
+
+    $('adminPremToggle').onclick = async () => {
+      const current = $('adminPremMode').textContent === t('premOn');
+      $('adminPremToggle').disabled = true;
+      try {
+        const data = await adminCall('set_premium', { enabled: !current });
+        adminMsg(data.message, !data.ok);
+        if (data.ok) { loadPremium(); refreshStats(); }
+      } catch (err) { adminMsg(err.message, true); }
+      finally { $('adminPremToggle').disabled = false; }
+    };
+
+    $('adminPremGen').onclick = async () => {
+      const count = Math.min(50, Math.max(1, Number(prompt('How many keys?', '5')) || 5));
+      $('adminPremGen').disabled = true;
+      try {
+        const data = await adminCall('generate_keys', { count });
+        adminMsg(data.message, !data.ok);
+        if (data.ok && data.keys) {
+          $('adminKeysOut').value = data.keys.join('\n');
+          loadPremium();
+        }
+      } catch (err) { adminMsg(err.message, true); }
+      finally { $('adminPremGen').disabled = false; }
+    };
+
+    $('adminKeysRefresh').onclick = async () => {
+      $('adminKeysRefresh').disabled = true;
+      try {
+        const data = await adminCall('list_keys');
+        if (data.ok) {
+          $('adminKeysOut').value = data.keys.length
+            ? data.keys.map((r) => `${r.key}  ·  ${r.status}${r.usedPhone ? '  ·  ' + r.usedPhone : ''}`).join('\n')
+            : 'No keys yet.';
+          adminMsg('Key list refreshed.');
+        }
+      } catch (err) { adminMsg(err.message, true); }
+      finally { $('adminKeysRefresh').disabled = false; }
+    };
+  </script>
+</body>
+</html>
