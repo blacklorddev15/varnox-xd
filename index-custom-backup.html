@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>𝐕𝐀𝐑𝐍𝐎𝐗 𝐗 𝐔𝐋𝐓𝐑𝐀 - Dedicated WhatsApp Pairing</title>
+  <link rel="stylesheet" href="./style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <small>VARNOX XD</small>
+        <strong>🔥 𝐕𝐀𝐑𝐍𝐎𝐗 𝐗 𝐔𝐋𝐓𝐑𝐀</strong>
+      </div>
+      <a class="icon-btn" href="./admin.html" title="Admin">⚡</a>
+    </header>
+
+    <div id="noticeBanner" class="notice-banner"></div>
+
+    <section class="card">
+      <img id="menuImg" class="banner-img" alt="Varnox XD banner">
+      <div>
+        <span id="botPill" class="pill">CHECKING BOT…</span>
+        <h1>Varnox XD Pairing</h1>
+        <p class="sub">Clean, lightweight bot for fast and reliable WhatsApp commands.</p>
+      </div>
+    </section>
+
+    <section class="card">
+      <div id="statusBox" class="status-box"></div>
+
+      <form id="pairForm">
+        <label for="phoneNumber">WHATSAPP NUMBER</label>
+        <div class="phone-wrap">
+          <span>+</span>
+          <input type="tel" id="phoneNumber" placeholder="254712345678" autocomplete="tel" required>
+        </div>
+        <p class="sub" style="margin-top:6px">Country code included, no spaces or plus.</p>
+
+        <div id="premiumKeyGroup" class="hidden">
+          <label for="premiumKey">ACTIVATION KEY</label>
+          <input type="text" id="premiumKey" placeholder="VN-XXXX-XXXX" autocomplete="off" spellcheck="false">
+        </div>
+
+        <button type="submit" class="btn" id="submitBtn">Generate Pairing Code</button>
+      </form>
+
+      <div id="resultBox" class="code-result">
+        <span class="code-eyebrow">YOUR PAIRING CODE</span>
+        <div class="pairing-code" id="pairingCode">---- - ----</div>
+        <p class="sub">Open WhatsApp → Linked Devices → Link with phone number.</p>
+        <button type="button" class="copy-btn" id="copyBtn">Copy Code</button>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span>Varnox XD Ecosystem</span> · <a href="./admin.html">Admin Dashboard</a>
+    </footer>
+  </div>
+
+  <script src="./script.js"></script>
+</body>
+</html>
