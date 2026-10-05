@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>⚡ Varnox XD – Admin</title>
+  <link rel="stylesheet" href="./style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <small>CONTROL</small>
+        <strong>⚡ VARNOX XD ADMIN</strong>
+      </div>
+      <a class="icon-btn" href="./index.html" title="Back">←</a>
+    </header>
+
+    <div id="loginCard" class="card">
+      <h1>Admin Login</h1>
+      <p class="sub">Enter the admin password to manage the pairing portal.</p>
+      <label for="pw">PASSWORD</label>
+      <input type="password" id="pw" autocomplete="current-password">
+      <button class="btn" id="loginBtn">Login</button>
+      <div id="loginMsg" class="status-box"></div>
+    </div>
+
+    <div id="panel" class="hidden">
+      <div class="grid2">
+        <div class="stat-card"><div class="n" id="stOnline">-</div><div class="l">ONLINE</div></div>
+        <div class="stat-card"><div class="n" id="stTotal">-</div><div class="l">SESSIONS</div></div>
+        <div class="stat-card"><div class="n" id="stKeys">-</div><div class="l">KEYS LEFT</div></div>
+        <div class="stat-card"><div class="n" id="stPrem">-</div><div class="l">PREMIUM</div></div>
+        <div id="latestCode" class="status-box"></div>
+      </div>
+
+      <div class="card">
+        <h1 style="font-size:16px">Notice banner</h1>
+        <textarea id="noticeInput" placeholder="Message shown on the pairing page…"></textarea>
+        <button class="btn" id="saveNoticeBtn">Save Notice</button>
+      </div>
+
+      <div class="card">
+        <h1 style="font-size:16px">Premium mode</h1>
+        <button class="btn" id="premiumBtn">Enable Premium Mode</button>
+      </div>
+
+      <div class="card">
+        <h1 style="font-size:16px">Generate activation key</h1>
+        <button class="btn ghost" id="genKeyBtn">+ Generate VN-XXXX-XXXX</button>
+        <div id="newKey" class="status-box"></div>
+      </div>
+
+      <div class="card">
+        <h1 style="font-size:16px">Database</h1>
+        <p class="sub">Active DB: <span id="curDbHost" class="mono" style="color:#4ade80">-</span></p>
+        <p class="sub">Control DB: <span id="ctrlDbHost" class="mono" style="color:#fbbf24">-</span>
+          <br><span style="opacity:.7">Every cold start bootstraps from the control DB. If it is the suspended one, the site uses it no matter what is stored here.</span></p>
+        <label for="dbUrl">NEW NEON CONNECTION STRING</label>
+        <textarea id="dbUrl" placeholder="postgresql://user:pass@host.neon.tech/db?sslmode=require"></textarea>
+        <button class="btn" id="switchDbBtn">Switch Database</button>
+        <div id="dbMsg" class="status-box"></div>
+        <p class="sub" style="margin-top:8px">Schema is created automatically if the new DB is empty. The bot must use the SAME database afterwards.</p>
+      </div>
+
+      <div class="card">
+        <h1 style="font-size:16px">Redeploy</h1>
+        <p class="sub">Rebuilds the current production deployment. Vercel only applies a changed environment variable on a <em>new</em> build, so this is the step that makes one take effect — without opening the Vercel dashboard.</p>
+        <button class="btn" id="redeployBtn">Redeploy now</button>
+        <div id="redeployMsg" class="status-box"></div>
+      </div>
+
+      <div class="card">
+        <h1 style="font-size:16px">Premium keys</h1>
+        <div id="keysList" class="mono"></div>
+      </div>
+
+      <div class="card">
+        <h1 style="font-size:16px">Paired users</h1>
+        <p class="sub">Everyone whose WhatsApp is linked to this bot — <span id="sessCount" class="mono">-</span></p>
+        <div id="sessionsList" class="mono"></div>
+        <button class="btn ghost" id="clearSessionsBtn">Delete disconnected</button>
+        <div id="clearMsg" class="status-box"></div>
+        <p class="sub" style="margin-top:8px">Deleting clears the database row only. To unlink a device fully, run <span class="mono">/delpair &lt;number&gt;</span> in the bot first — that revokes the WhatsApp link and clears the session files.</p>
+      </div>
+    </div>
+
+    <footer class="footer"><span>Varnox XD Ecosystem</span></footer>
+  </div>
+  <script src="./admin.js"></script>
+</body>
+</html>
