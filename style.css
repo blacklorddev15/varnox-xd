@@ -1,12 +1,13 @@
-/* VARNOX XD – shared styles
-   Palette: golden (--gold #facc15) on near-black, matching the golden theme used
+/* VARNOX XD – Neon Void theme
+   Violet (#a855f7) + cyan (#22d3ee) on deep space-black.
+   Palette: golden (--gold #a855f7) on near-black, matching the golden theme used
    across the Blacklord portals. Layout and structure are unchanged. */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 :root {
-  --gold: #facc15;
-  --gold-deep: #d97706;
-  --gold-soft: rgba(250, 204, 21, 0.13);
-  --gold-line: rgba(250, 204, 21, 0.22);
+  --gold: #a855f7;
+  --gold-deep: #6d28d9;
+  --gold-soft: rgba(168, 85, 247, 0.13);
+  --gold-line: rgba(168, 85, 247, 0.22);
   --bg: #09090b;
   --card: rgba(24, 24, 27, 0.92);
   --field: #0d0d10;
@@ -24,7 +25,7 @@ body {
 .topbar .brand small { display: block; font-size: 10px; letter-spacing: 3px; color: var(--text-dim); }
 .topbar .brand strong { font-size: 17px; color: #fff; }
 .icon-btn {
-  background: #141418; border: 1px solid var(--gold-line); color: #fde68a;
+  background: #141418; border: 1px solid var(--gold-line); color: #c4b5fd;
   padding: 7px 11px; border-radius: 9px; font-size: 15px; cursor: pointer; text-decoration: none;
 }
 .icon-btn:hover { background: #1e1e24; }
@@ -32,11 +33,11 @@ body {
    solid gold border + gold glow, with a warm gold-tinted fill. */
 .card {
   background: linear-gradient(145deg, rgba(61, 52, 14, 0.5), rgba(24, 24, 27, 0.96));
-  border: 1px solid #facc15;
+  border: 1px solid #a855f7;
   border-radius: 16px;
   padding: 18px;
   margin-bottom: 14px;
-  box-shadow: 0 5px 20px rgba(250, 204, 21, 0.15), 0 22px 48px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 5px 20px rgba(168, 85, 247, 0.15), 0 22px 48px rgba(0, 0, 0, 0.5);
 }
 .banner-img { width: 100%; border-radius: 12px; margin-bottom: 4px; display: block; }
 h1 { font-size: 21px; margin: 6px 0 2px; }
@@ -53,23 +54,23 @@ input[type=tel], input[type=text], input[type=password] {
   width: 100%; background: var(--field); border: 1px solid var(--gold-line); color: #f4f4f5;
   padding: 12px 14px; border-radius: 10px; font-size: 15px; outline: none;
 }
-input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.15); }
+input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15); }
 .phone-wrap { display: flex; align-items: center; background: var(--field); border: 1px solid var(--gold-line); border-radius: 10px; overflow: hidden; }
-.phone-wrap span { padding: 0 12px; color: var(--text-dim); font-size: 16px; border-right: 1px solid rgba(250,204,21,.18); align-self: stretch; display: flex; align-items: center; }
+.phone-wrap span { padding: 0 12px; color: var(--text-dim); font-size: 16px; border-right: 1px solid rgba(168,85,247,.18); align-self: stretch; display: flex; align-items: center; }
 .phone-wrap input { border: none; background: transparent; border-radius: 0; }
 .btn {
   display: block; width: 100%; border: none; border-radius: 10px; padding: 13px;
   font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 14px;
-  background: linear-gradient(135deg, var(--gold), var(--gold-deep)); color: #1a1503;
+  background: linear-gradient(135deg, var(--gold), var(--gold-deep)); color: #140726;
 }
 .btn:disabled { opacity: .55; cursor: not-allowed; }
-.btn.ghost { background: #141418; color: #fde68a; border: 1px solid rgba(250, 204, 21, 0.3); }
-.icon-btn { border: 1px solid rgba(250, 204, 21, 0.3); color: #fcd34d; }
+.btn.ghost { background: #141418; color: #c4b5fd; border: 1px solid rgba(168, 85, 247, 0.3); }
+.icon-btn { border: 1px solid rgba(168, 85, 247, 0.3); color: #a78bfa; }
 .status-box { margin-top: 14px; padding: 12px; border-radius: 10px; font-size: 14px; display: none; }
 .status-box.show { display: block; }
 .status-box.ok { background: rgba(74,222,128,.08); border: 1px solid #2e5e46; color: #86efac; }
 .status-box.err { background: rgba(248,113,113,.08); border: 1px solid #7a3540; color: #fca5a5; }
-.status-box.info { background: rgba(250,204,21,.08); border: 1px solid rgba(250,204,21,.35); color: #fde68a; }
+.status-box.info { background: rgba(168,85,247,.08); border: 1px solid rgba(168,85,247,.35); color: #c4b5fd; }
 .code-result { text-align: center; padding: 18px; display: none; }
 .code-result.show { display: block; }
 .code-eyebrow { font-size: 10px; letter-spacing: 3px; color: var(--text-dim); }
@@ -77,15 +78,15 @@ input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(250, 204, 21
   font-family: 'JetBrains Mono', Menlo, monospace; font-size: 30px; font-weight: 800;
   color: var(--gold); margin: 8px 0 12px; letter-spacing: 2px;
 }
-.copy-btn { background: var(--field); border: 1px solid rgba(250,204,21,.35); color: var(--gold); padding: 9px 18px; border-radius: 9px; cursor: pointer; font-size: 13px; }
+.copy-btn { background: var(--field); border: 1px solid rgba(168,85,247,.35); color: var(--gold); padding: 9px 18px; border-radius: 9px; cursor: pointer; font-size: 13px; }
 .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 /* Inner tiles keep the softer gold hairline (like the parent site's .card-icon
    chips) so the single card holds one strong gold edge. */
-.stat-card { background: rgba(250, 204, 21, 0.05); border: 1px solid rgba(250, 204, 21, 0.35); border-radius: 12px; padding: 12px; text-align: center; }
+.stat-card { background: rgba(168, 85, 247, 0.05); border: 1px solid rgba(168, 85, 247, 0.35); border-radius: 12px; padding: 12px; text-align: center; }
 .stat-card .n { font-size: 20px; font-weight: 800; color: var(--gold); }
 .stat-card .l { font-size: 10px; letter-spacing: 1px; color: var(--text-dim); margin-top: 2px; }
 .hidden { display: none; }
-.row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(250,204,21,.1); font-size: 13px; }
+.row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(168,85,247,.1); font-size: 13px; }
 .row:last-child { border-bottom: none; }
 .row .tag { font-size: 10px; padding: 2px 8px; border-radius: 99px; }
 .tag.on { background: rgba(74,222,128,.12); color: #4ade80; }
@@ -94,7 +95,7 @@ input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(250, 204, 21
 textarea { width: 100%; background: var(--field); border: 1px solid var(--gold-line); color: #f4f4f5; padding: 10px; border-radius: 10px; font-family: inherit; font-size: 13px; resize: vertical; min-height: 60px; }
 .footer { text-align: center; color: #71717a; font-size: 12px; margin-top: 18px; }
 .footer a { color: var(--gold); text-decoration: none; }
-.notice-banner { display: none; background: rgba(250,204,21,.1); border: 1px solid rgba(250,204,21,.35); color: var(--gold); padding: 10px 14px; border-radius: 10px; font-size: 13px; margin-bottom: 12px; }
+.notice-banner { display: none; background: rgba(168,85,247,.1); border: 1px solid rgba(168,85,247,.35); color: var(--gold); padding: 10px 14px; border-radius: 10px; font-size: 13px; margin-bottom: 12px; }
 .notice-banner.show { display: block; }
 .mono { font-family: Menlo, Consolas, monospace; font-size: 12px; }
 
